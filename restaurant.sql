@@ -24,5 +24,5 @@ CREATE TABLE go_delivery.restaurants (
 ) ;
 
 CREATE INDEX owner_id ON go_delivery.restaurants USING btree (owner_id);
-create  index city_id on go_delivery.restaurants using btree (city_id)
+create  index city_id on go_delivery.restaurants using btree (city_id);
 
