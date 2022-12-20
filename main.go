@@ -3,25 +3,18 @@ package main
 import (
 	"log"
 	"os"
-	"strconv"
 
 	"net/http"
+
+	"github.com/hongnhat195/first-golang/component"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"github.com/hongnhat195/first-golang/modules/restaurants/restauranttransport/ginrestaurant"
 )
-
-type Restaurant struct {
-	Id   int    `json:"id" gorm:"column:id;"`
-	Name string `json:"name" gorm:"column:name;"`
-	Addr string `json:"address" gorm:"column:addr;"`
-}
-
-func (Restaurant) TableName() string {
-	return "go_delivery.restaurants"
-}
 
 func main() {
 	error := godotenv.Load(".env")
@@ -50,71 +43,19 @@ func runService(db *gorm.DB) error {
 			"message": "PONG",
 		})
 	})
-
+	appCtx := component.NewAppContext(db)
 	restaurant := r.Group("/restaurants")
 	{
-		restaurant.POST("", func(c *gin.Context) {
-			var data Restaurant
+		restaurant.POST("", ginrestaurant.CreateRestaurant(appCtx))
 
-			if err := c.ShouldBind(&data); err != nil {
-				c.JSON(401, map[string]interface{}{
-					"error": err.Error(),
-				})
-				return
-			}
+		restaurant.GET("/:id", ginrestaurant.GetRestaurant(appCtx))
 
-			if err := db.Create(&data).Error; err != nil {
-				c.JSON(401, map[string]interface{}{
-					"error": err.Error(),
-				})
-				return
-			}
-			c.JSON(http.StatusOK, data)
-		})
+		restaurant.GET("", ginrestaurant.ListRestaurant(appCtx))
 
-		restaurant.GET("/:id", func(c *gin.Context) {
-			id, err := strconv.Atoi(c.Param("id"))
+		restaurant.PATCH("/:id", ginrestaurant.UpdateRestaurant(appCtx))
 
-			if err != nil {
-				c.JSON(401, gin.H{
-					"error": err.Error(),
-				})
-				return
-			}
-			var data Restaurant
+		restaurant.DELETE("/:id", ginrestaurant.DeleteRestaurant(appCtx))
 
-			if err := db.Where("id = ?", id).First(&data).Error; err != nil {
-				c.JSON(401, gin.H{
-					"error": err.Error(),
-				})
-				return
-			}
-
-			c.JSON(http.StatusOK, data)
-		})
-
-		restaurant.GET("", func(c *gin.Context) {
-			var data []Restaurant
-			type Filter struct {
-				CityId int `json:"city_id" form: "city_id"`
-			}
-
-			var filter Filter
-			c.ShouldBind(&filter)
-
-			newDb := db
-			if filter.CityId > 0 {
-				newDb = db.Where("cituy_id = ?", filter.CityId)
-			}
-
-			if err := newDb.Find(&data).Error; err != nil {
-				c.JSON(401, map[string]interface{}{
-					"error": err.Error(),
-				})
-				return
-			}
-			c.JSON(http.StatusOK, data)
-		})
 	}
 
 	return r.Run()

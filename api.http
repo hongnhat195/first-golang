@@ -1,0 +1,23 @@
+GET http://localhost:8080/restaurants?limit=3
+###
+POST http://localhost:8080/restaurants
+Content-Type: application/json
+
+{
+    "name": "Nhật T",
+    "address": "HT13",
+    "tab": "OK"
+}
+###
+PATCH http://localhost:8080/restaurants/1
+Content-Type: application/json
+
+{
+    "name": "Tem1"
+}
+
+###
+DELETE  http://localhost:8080/restaurants/4
+
+###
+GET http://localhost:8080/ping
