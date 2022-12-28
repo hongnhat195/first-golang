@@ -7,20 +7,26 @@ import (
 	"github.com/hongnhat195/first-golang/common"
 )
 
+const EntityName = "restaurants"
+
 type Restaurant struct {
 	common.SQLModel `json:",inline"`
-	Id              int    `json:"id" gorm:"column:id;"`
-	Name            string `json:"name" gorm:"column:name;"`
-	Addr            string `json:"address" gorm:"column:addr;"`
+	// Id              int            `json:"id" gorm:"column:id;"`
+	Name  string         `json:"name" gorm:"column:name;"`
+	Addr  string         `json:"address" gorm:"column:addr;"`
+	Logo  *common.Image  `json:"logo" gorm:"column:logo;"`
+	Cover *common.Images `json:"cover" gorm:"column:cover;"`
 }
 
 func (Restaurant) TableName() string {
-	return "go_delivery.restaurants"
+	return "restaurants"
 }
 
 type RestaurantUpdate struct {
-	Name *string `json:"name" gorm:"column:name;"`
-	Addr *string `json:"address" gorm:"column:addr;"`
+	Name  *string        `json:"name" gorm:"column:name;"`
+	Addr  *string        `json:"address" gorm:"column:addr;"`
+	Logo  *common.Image  `json:"logo" gorm:"column:logo;"`
+	Cover *common.Images `json:"cover" gorm:"column:cover;"`
 }
 
 func (RestaurantUpdate) TableName() string {
@@ -28,8 +34,10 @@ func (RestaurantUpdate) TableName() string {
 }
 
 type RestaurantCreate struct {
-	Name string `json:"name" gorm:"column:name;"`
-	Addr string `json:"address" gorm:"column:addr;"`
+	Name  string         `json:"name" gorm:"column:name;"`
+	Addr  string         `json:"address" gorm:"column:addr;"`
+	Logo  *common.Image  `json:"logo" gorm:"column:logo;"`
+	Cover *common.Images `json:"cover" gorm:"column:cover;"`
 }
 
 func (RestaurantCreate) TableName() string {
@@ -44,4 +52,8 @@ func (res *RestaurantCreate) Validate() error {
 		return errors.New("Restaurant name can't be blank")
 	}
 	return nil
+}
+
+func (data *Restaurant) Mask(isAdminOrOwner bool) {
+	data.GenUID(common.DbTypeRestaurant)
 }

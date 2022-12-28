@@ -1,7 +1,6 @@
 package ginrestaurant
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,25 +16,16 @@ func ListRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 		var filter restaurantmodel.Filter
 
 		if err := c.ShouldBind(&filter); err != nil {
-			c.JSON(401, gin.H{
-				"error": err.Error(),
-			})
-
-			return
+			panic(common.ErrInvalidRequest(err))
 		}
 
 		var paging common.Paging
 
 		if err := c.ShouldBind(&paging); err != nil {
-			c.JSON(401, gin.H{
-				"error": err.Error(),
-			})
-
-			return
+			panic(common.ErrInvalidRequest(err))
 		}
 
 		paging.Fulfill()
-		fmt.Println(paging)
 
 		store := restaurantstore.NewSQLStore(appCtx.GetMainDBConnection())
 		biz := restaurantbiz.NewlistRestaurantBiz(store)
@@ -43,11 +33,10 @@ func ListRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 		result, err := biz.ListRestaurant(c.Request.Context(), &filter, &paging)
 
 		if err != nil {
-			c.JSON(401, gin.H{
-				"error": err.Error(),
-			})
-
-			return
+			panic(err)
+		}
+		for i := range result {
+			result[i].Mask(true)
 		}
 
 		c.JSON(http.StatusOK, common.NewSuccessReponse(result, paging, filter))
