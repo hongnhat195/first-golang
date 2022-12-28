@@ -11,6 +11,7 @@ import (
 	"github.com/hongnhat195/first-golang/modules/restaurants/restaurantstore"
 )
 
+
 func ListRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var filter restaurantmodel.Filter
@@ -28,7 +29,9 @@ func ListRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 		paging.Fulfill()
 
 		store := restaurantstore.NewSQLStore(appCtx.GetMainDBConnection())
-		biz := restaurantbiz.NewlistRestaurantBiz(store)
+		likeStore := restaurantlikestorage.NewSQLStore(appCtx.GetMainDBConnection())
+
+		biz := restaurantbiz.NewlistRestaurantBiz(store, likeStore)
 
 		result, err := biz.ListRestaurant(c.Request.Context(), &filter, &paging)
 
@@ -37,6 +40,10 @@ func ListRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 		}
 		for i := range result {
 			result[i].Mask(true)
+
+			if i == len(result)-1 {
+				paging.NextCursor = result[i].FakeId.String()
+			}
 		}
 
 		c.JSON(http.StatusOK, common.NewSuccessReponse(result, paging, filter))

@@ -1,10 +1,10 @@
-GET http://localhost:8080/restaurants?
+GET http://localhost:8080/restaurants?limit=2&cursor=gGzTBURqhajG
 ###
 POST http://localhost:8080/restaurants
 Content-Type: application/json
 
 {
-    "name": "Nhật T",
+    "name": "Love tam",
     "address": "H",
     "logo":  {
         "url": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fvietnamnet.vn%2Favatar-2-can-moc-nua-ty-do-sau-vai-ngay-rieng-viet-nam-thu-99-ty-dong-2092829.html&psig=AOvVaw2bGgRuw9EILtpUbeXfSMSZ&ust=1672067229655000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCICz4fuFlfwCFQAAAAAdAAAAABAE",
@@ -33,4 +33,4 @@ Content-Type: application/json
 DELETE  http://localhost:8080/restaurants/4
 
 ###
-GET http://localhost:8080/restaurants/3
+GET http://localhost:8080/restaurants/iUwqQA5kiz98
