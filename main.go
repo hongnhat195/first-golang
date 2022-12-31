@@ -4,8 +4,6 @@ import (
 	"log"
 	"os"
 
-	"net/http"
-
 	"github.com/hongnhat195/first-golang/component"
 	"github.com/hongnhat195/first-golang/component/uploadprovider"
 	"github.com/hongnhat195/first-golang/middlewares"
@@ -17,6 +15,7 @@ import (
 
 	"github.com/hongnhat195/first-golang/modules/restaurants/restauranttransport/ginrestaurant"
 	"github.com/hongnhat195/first-golang/modules/upload/uploadtransport/ginupload"
+	"github.com/hongnhat195/first-golang/modules/user/usertransport/ginuser"
 )
 
 func main() {
@@ -52,11 +51,7 @@ func runService(db *gorm.DB, upprovider uploadprovider.UploadProvider) error {
 	r := gin.Default()
 	r.Use(middlewares.Recover(appCtx))
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "PONG",
-		})
-	})
+	r.POST("/register", ginuser.Register(appCtx))
 
 	r.POST("/upload", ginupload.Upload(appCtx))
 

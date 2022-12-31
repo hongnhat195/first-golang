@@ -24,9 +24,9 @@ type listRestaurantBiz struct {
 	likeStore LikeStore
 }
 
-func NewlistRestaurantBiz(store ListRestaurantStore) *listRestaurantBiz {
+func NewlistRestaurantBiz(store ListRestaurantStore, likeStore LikeStore) *listRestaurantBiz {
 
-	return &listRestaurantBiz{store: store}
+	return &listRestaurantBiz{store: store, likeStore: likeStore}
 }
 
 func (biz *listRestaurantBiz) ListRestaurant(ctx context.Context,
@@ -57,5 +57,5 @@ func (biz *listRestaurantBiz) ListRestaurant(ctx context.Context,
 		}
 	}
 
-	return result, err
+	return result, nil
 }

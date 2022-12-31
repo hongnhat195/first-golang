@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/hongnhat195/first-golang/common"
 	"github.com/hongnhat195/first-golang/component"
+	restaurantlikestorage "github.com/hongnhat195/first-golang/modules/restaurantlike/storage"
 	"github.com/hongnhat195/first-golang/modules/restaurants/restaurantbiz"
 	"github.com/hongnhat195/first-golang/modules/restaurants/restaurantmodel"
 	"github.com/hongnhat195/first-golang/modules/restaurants/restaurantstore"
@@ -30,6 +31,7 @@ func ListRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 
 		store := restaurantstore.NewSQLStore(appCtx.GetMainDBConnection())
 		likeStore := restaurantlikestorage.NewSQLStore(appCtx.GetMainDBConnection())
+
 
 		biz := restaurantbiz.NewlistRestaurantBiz(store, likeStore)
 
