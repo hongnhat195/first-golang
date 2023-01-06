@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/hongnhat195/first-golang/common"
+	"github.com/hongnhat195/first-golang/component/tokenprovider"
 )
 
 const EntityName = "User"
@@ -79,17 +80,17 @@ func (UserLogin) TableName() string {
 	return User{}.TableName()
 }
 
-// type Account struct {
-// 	AccessToken  *tokenprovider.Token `json:"access_token"`
-// 	RefreshToken *tokenprovider.Token `json:"refresh_token"`
-// }
+type Account struct {
+	AccessToken  *tokenprovider.Token `json:"access_token"`
+	RefreshToken *tokenprovider.Token `json:"refresh_token"`
+}
 
-// func NewAccount(at, rt *tokenprovider.Token) *Account {
-// 	return &Account{
-// 		AccessToken:  at,
-// 		RefreshToken: rt,
-// 	}
-// }
+func NewAccount(at, rt *tokenprovider.Token) *Account {
+	return &Account{
+		AccessToken:  at,
+		RefreshToken: rt,
+	}
+}
 
 var (
 	ErrUsernameOrPasswordInvalid = common.NewCustomError(

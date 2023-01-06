@@ -9,9 +9,9 @@ import (
 	restaurantlikestorage "github.com/hongnhat195/first-golang/modules/restaurantlike/storage"
 	"github.com/hongnhat195/first-golang/modules/restaurants/restaurantbiz"
 	"github.com/hongnhat195/first-golang/modules/restaurants/restaurantmodel"
+	"github.com/hongnhat195/first-golang/modules/restaurants/restaurantrepo"
 	"github.com/hongnhat195/first-golang/modules/restaurants/restaurantstore"
 )
-
 
 func ListRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -31,9 +31,9 @@ func ListRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 
 		store := restaurantstore.NewSQLStore(appCtx.GetMainDBConnection())
 		likeStore := restaurantlikestorage.NewSQLStore(appCtx.GetMainDBConnection())
+		repo := restaurantrepo.NewListRestaurantRepo(store, likeStore)
 
-
-		biz := restaurantbiz.NewlistRestaurantBiz(store, likeStore)
+		biz := restaurantbiz.NewlistRestaurantBiz(repo)
 
 		result, err := biz.ListRestaurant(c.Request.Context(), &filter, &paging)
 

@@ -2,31 +2,26 @@ package restaurantbiz
 
 import (
 	"context"
-	"log"
 
 	"github.com/hongnhat195/first-golang/common"
 	"github.com/hongnhat195/first-golang/modules/restaurants/restaurantmodel"
 )
 
-type ListRestaurantStore interface {
-	ListDataByCondition(ctx context.Context,
-		conditions map[string]interface{},
+type ListRestaurantRepo interface {
+	ListRestaurant(
+		ctx context.Context,
 		filter *restaurantmodel.Filter,
-		paging *common.Paging, moreKeys ...string) ([]restaurantmodel.Restaurant, error)
-}
-
-type LikeStore interface {
-	GetRestaurantLikes(ctx context.Context, ids []int) (map[int]int, error)
+		paging *common.Paging,
+	) ([]restaurantmodel.Restaurant, error)
 }
 
 type listRestaurantBiz struct {
-	store     ListRestaurantStore
-	likeStore LikeStore
+	repo ListRestaurantRepo
 }
 
-func NewlistRestaurantBiz(store ListRestaurantStore, likeStore LikeStore) *listRestaurantBiz {
+func NewlistRestaurantBiz(repo ListRestaurantRepo) *listRestaurantBiz {
 
-	return &listRestaurantBiz{store: store, likeStore: likeStore}
+	return &listRestaurantBiz{repo: repo}
 }
 
 func (biz *listRestaurantBiz) ListRestaurant(ctx context.Context,
@@ -34,27 +29,9 @@ func (biz *listRestaurantBiz) ListRestaurant(ctx context.Context,
 	paging *common.Paging,
 ) ([]restaurantmodel.Restaurant, error) {
 
-	result, err := biz.store.ListDataByCondition(ctx, nil, filter, paging)
+	result, err := biz.repo.ListRestaurant(ctx, filter, paging)
 	if err != nil {
 		return nil, common.ErrCannotListEntity(restaurantmodel.EntityName, err)
-	}
-	ids := make([]int, len(result))
-
-	for i := range result {
-		ids[i] = result[i].Id
-	}
-
-
-	mapResLike, err := biz.likeStore.GetRestaurantLikes(ctx, ids)
-
-	if err != nil {
-		log.Println("Can not get restaurant likes", err)
-	}
-
-	if v := mapResLike; v != nil {
-		for i, item := range result {
-			result[i].LikeCount = v[item.Id]
-		}
 	}
 
 	return result, nil

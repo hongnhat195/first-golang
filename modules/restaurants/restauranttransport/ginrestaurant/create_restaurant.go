@@ -21,6 +21,8 @@ func CreateRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 			panic(common.ErrInvalidRequest(err))
 		}
 
+		data.UserId = c.MustGet(common.CurrentUser).(common.Requester).GetUserId()
+
 		store := restaurantstore.NewSQLStore(appCtx.GetMainDBConnection())
 		biz := restaurantbiz.NewCreateRestaurantBiz(store)
 

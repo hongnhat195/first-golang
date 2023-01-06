@@ -1,6 +1,7 @@
-GET http://localhost:8080/restaurants?
+GET http://localhost:8080/v1/restaurants?limit=4
 ###
-POST http://localhost:8080/restaurants
+POST http://localhost:8080/v1/restaurants
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InVzZXJfaWQiOjUsInJvbGUiOiJ1c2VyIn0sImV4cCI6MTY3NTI0MjgzMiwiaWF0IjoxNjcyNjUwODMyfQ.VDm2GEhC65hxY80Z-36KM90aqvaepLBEOLTW7cHg1yc
 Content-Type: application/json
 
 {
@@ -22,7 +23,7 @@ Content-Type: application/json
     ]
 }
 ###
-PATCH http://localhost:8080/restaurants/1
+PATCH http://localhost:8080/v1/restaurants/1
 Content-Type: application/json
 
 {
@@ -30,18 +31,51 @@ Content-Type: application/json
 }
 
 ###
-DELETE  http://localhost:8080/restaurants/4
+DELETE  http://localhost:8080/v1/restaurants/4
 
 ###
-GET http://localhost:8080/restaurants/iUwqQA5kiz98
+GET http://localhost:8080/restaurants/v1/iUwqQA5kiz98
 
 ###
-POST  http://localhost:8080/register
-
+POST  http://localhost:8080/v1/register
 Content-Type: application/json
+
 {
-    "email" : "200l@gmail.com",
-    "password" : "123456",
-    "first_name" : "Nhajat",
-    "last_name" : "Nhajat",
+    "email": "200l@gmail.com",
+    "password": "123456",
+    "first_name": "Nhajat",
+    "last_name": "Nhajat"
 }
+
+
+###
+POST  http://localhost:8080/v1/login
+Content-Type: application/json
+
+{
+    "email": "200l@gmail.com",
+    "password": "123456"
+}
+
+### 
+GET http://localhost:8080/v1/profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InVzZXJfaWQiOjUsInJvbGUiOiJ1c2VyIn0sImV4cCI6MTY3NTQ5NzYyOCwiaWF0IjoxNjcyOTA1NjI4fQ.5phyzYyo__a8ze37L87H7WtS71VW-CA0Eag3BCY2-Tk
+
+
+###
+GET http://localhost:8080/v1/restaurants/gGzTBURqhajG/liked-users?limit=1
+
+###
+GET http://localhost:8080/v1/restaurants/3mKb6MT4gWZxRU/liked-restaurant?limit=1
+
+
+###
+POST  http://localhost:8080/v1/restaurants/3mMo3hVGTE4VTN/like
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InVzZXJfaWQiOjUsInJvbGUiOiJ1c2VyIn0sImV4cCI6MTY3NTQ5NzYyOCwiaWF0IjoxNjcyOTA1NjI4fQ.5phyzYyo__a8ze37L87H7WtS71VW-CA0Eag3BCY2-Tk
+
+
+
+###
+DELETE   http://localhost:8080/v1/restaurants/3mMo3hVGTE4VTN/unlike
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InVzZXJfaWQiOjUsInJvbGUiOiJ1c2VyIn0sImV4cCI6MTY3NTQ5NzYyOCwiaWF0IjoxNjcyOTA1NjI4fQ.5phyzYyo__a8ze37L87H7WtS71VW-CA0Eag3BCY2-Tk

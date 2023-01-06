@@ -58,6 +58,7 @@ func (e *AppError) RootError() error {
 	}
 
 	return e.RootErr
+
 }
 
 func (e *AppError) Error() string {
